@@ -1,28 +1,28 @@
-== About ==
+## About ##
 
 This program is a simple SSL man-in-the-middle proxy. It is designed
 to intercept SSL connections via the Linux iptables REDIRECT target,
 generate a fake certificate matching the real server (but signed by
 a local CA) and then relay the data.
 
-== Requirements ==
+## Requirements ##
 
  * Python 2.6 or greater
  * Twisted
  * OpenSSL
  * pyOpenSSL
 
-== Setup ==
+## Setup ##
 
 First, you must configure iptables to redirect the traffic, like so:
 
- iptables -t nat -A PREROUTING -s 192.168.0.0/16 -p tcp --dport 443 \
-  -j REDIRECT --to-ports 4443
+    iptables -t nat -A PREROUTING -s 192.168.0.0/16 -p tcp --dport 443 \
+      -j REDIRECT --to-ports 4443
 
 Obviously you will need to direct your traffic through your Linux box,
 using whatever method e.g. routing.
 
-== Private CA ==
+## Private CA ##
 
 You will need a CA cert & key in the working directory of the process:
 
@@ -32,14 +32,14 @@ You will need a CA cert & key in the working directory of the process:
 ...so that OpenSSL can sign the fake certificate requests. The process
 will dump 3 files for each certificate it impersonates:
 
- hash-key.pem - RSA key
- hash-csr.pem - Cert-signing requests
- hash-crt.pem - X509 cert, signed by ca.key (verified by ca.crt)
+ * hash-key.pem - RSA key
+ * hash-csr.pem - Cert-signing requests
+ * hash-crt.pem - X509 cert, signed by ca.key (verified by ca.crt)
 
 Obviously your clients will need to have imported, and to trust, your
 private CA cert.
 
-== Usage ==
+## Usage ##
 
 The proxy listens for REDIRECT-ed connections on port 4443, extracts
 the original destination address, connects and extracts the far-end
@@ -49,7 +49,7 @@ It should work transparently. It will cache certs, and should remember
 them across restarts. If the same cert is used on multiple IPs, it
 will recognise this and use the same fake cert.
 
-== Problems ==
+## Problems ##
 
 The fake certs are pretty minimal - CN and subjecAltName=DNS:* are copied
 over, but no other extensions (e.g. extendedKeyUsage). There is no CRL
