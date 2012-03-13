@@ -1,4 +1,5 @@
 *.pem
+.rnd
 *~
 *.pyc
 ca.crt
